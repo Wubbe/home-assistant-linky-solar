@@ -1,0 +1,109 @@
+blueprint:
+  name: Open DTU - Zero Export
+  description: "\n ## Open-DTU Zero Export\n\n\n ### !WARNING!\n\n This automation
+    enables you to achieve zero export with your
+    Open DTU inverter. \n\n It uses a simplified version of hysterisis. This means,
+    that it will try to keep your inverter's export in between two values which can be customized below."
+  domain: automation
+  input:
+    sensor_linky_energie:
+      name: Energy consumption in W
+      description: Select a sensor displaying your total current grid-import wattage.
+      selector:
+        entity: {}
+    sensor_dtu_output:
+      name: Open-DTU Output Entity
+      description: Select the output-entity provided by Open-DTU displaying the current solar output power.
+      selector:
+        entity: {}
+    number_dtu_limit:
+      name: Open-DTU Limit Entity (Non Persistent, Absolute)
+      description: Select the limit-entity provided by Open-DTU. This entity is expected
+        to be a "Input-Number" type. It's max value should reflect the inverter's max output.
+      selector:
+        entity: {}
+    sensor_hoymiles_producing:
+      name: Hoymiles indication it is producing or not
+      description: Select the 'Producing y/n' entity.
+      selector:
+        entity: {}
+    number_potential_power:
+      name: Potential solar power (W)
+      description: The variable containing the potential power of the inverter if the limit = 0.
+      selector:
+        entity: {}
+    input_dtu_max:
+      name: Open-DTU Max Output (Enter manually)
+      description: Enter your inverter's max output power (For example, 1600 for
+        Hoymiles HMS-1600 inverters). This should be identical with the DTU-Limiter's
+        max value.
+      selector:
+        number:
+          min: 0.0
+          max: 999999.0
+          step: 1.0
+          unit_of_measurement: W
+          mode: box
+    input_user_hysteresis:
+      name: Acceptable Power consumption
+      description: Accaptable amount of power that may be consumed without the inverters limit will be changed.
+      selector:
+        number:
+          min: 0.0
+          max: 999999.0
+          step: 1.0
+          unit_of_measurement: W
+          mode: box
+variables:
+  sensor_linky_energie: !input sensor_linky_energie
+  sensor_dtu_output: !input sensor_dtu_output
+  number_dtu_limit: !input number_dtu_limit
+  number_potential_power: !input number_potential_power
+  input_dtu_max: !input input_dtu_max
+  input_user_hysteresis: !input input_user_hysteresis
+  sensor_hoymiles_producing: !input sensor_hoymiles_producing 
+trigger:
+#- platform: state
+#  entity_id: !input sensor_linky_energie
+- trigger: time_pattern
+  seconds: '10'
+conditions:
+- condition: template
+  value_template: '{{(states(sensor_dtu_output)|int()) > 0}}'
+- condition: template
+  value_template: '{{(states(number_dtu_limit)|int()) != 1998}}'
+action:
+- if:
+  - condition: and
+    conditions:
+    - condition: template
+      value_template: '{{ (states(sensor_linky_energie)|float()) > ((input_user_hysteresis)|float()) }}'
+    - condition: template
+      value_template: '{{ (states(number_dtu_limit)|float()) < ((input_dtu_max)|float()) }}'
+#   then:
+#   - service: number.set_value
+#     data_template:
+#       entity_id: !input number_dtu_limit
+#       value: '{{ (states(number_dtu_limit)|float()) + (states(sensor_linky_energie)|float()) - ((input_user_hysteresis)|float()) }}'
+  then:
+  - if:
+    - condition: template
+      value_template: '{{ ((states(number_dtu_limit)|float()) + (states(sensor_linky_energie)|float()) - ((input_user_hysteresis)|float())) < ((input_dtu_max)|float()) }}'
+    then:
+    - service: number.set_value
+      data_template:
+        entity_id: !input number_dtu_limit
+        value: '{{ (states(number_dtu_limit)|float()) + (states(sensor_linky_energie)|float()) - ((input_user_hysteresis)|float()) }}'
+    else:
+    - service: number.set_value
+      data_template:
+         entity_id: !input number_dtu_limit
+         value: '{{ ((input_dtu_max)|float()) }}'
+- if:
+  - condition: template
+    value_template: '{{(states(sensor_linky_energie)|int()) <= 0 }}'
+  then:
+  - service: number.set_value
+    data_template:
+      entity_id: !input number_dtu_limit
+      value: '{{ (states(number_dtu_limit)|float()) / 3.0 }}'
