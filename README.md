@@ -7,7 +7,7 @@ This repository contains averything I have done to be able to read out my Linky 
 
 ### Wemos TeleInfo
 
-The TeleInfo device is a small print that is soldered on an ESP32 mini print. The device is then connected to your Linky kWh meter that is used in France. To get this system working, you have to flash the ESP32 with ESPHome software, that is provided by a Home-Assistant instance. To read all necessary data, use the esphome-linky.yaml file that I have made.
+The TeleInfo device is a small print that is soldered on an ESP32 mini print. The device is then connected to your Linky kWh meter that is used in France. To get this system working, you have to flash the ESP32 with ESPHome software, that is provided by a Home-Assistant instance. To read all necessary data, use the esphome-linky.yaml file that I have made [esphome-linky.yaml]
 
 https://www.tindie.com/products/hallard/wemos-teleinfo/
 
@@ -25,5 +25,7 @@ https://shop.blinkyparts.com/en/OpenDTU-CMT-Your-evaluation-for-your-balcony-sol
 This is based on a blueprint: https://gist.github.com/NikGro/c9b783d13b4b8157901e6fbd3ea18389
 
 # Control your Hoymiles inverter to not return electricity
+
+[opendtu_zero_export_linky.yaml]
 
 
