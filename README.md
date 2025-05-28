@@ -7,7 +7,9 @@ This repository contains averything I have done to be able to read out my Linky 
 
 ### Wemos TeleInfo
 
-The TeleInfo device is a small print that is soldered on an ESP32 mini print. The device is then connected to your Linky kWh meter that is used in France. To get this system working, you have to flash the ESP32 with ESPHome software, that is provided by a Home-Assistant instance. To read all necessary data, use the esphome-linky.yaml file that I have made [esphome-linky.yaml]
+![TeleInfo](./wemos-teleinfo.png)
+
+The TeleInfo device is a small print that is soldered on an ESP32 mini print. The device is then connected to your Linky kWh meter that is used in France. To get this system working, you have to flash the ESP32 with ESPHome software, that is provided by a Home-Assistant instance. To read all necessary data, use the esphome-linky.yaml file that I have made [esphome-linky.yaml](./esphome-linky.yaml)
 
 https://www.tindie.com/products/hallard/wemos-teleinfo/
 
@@ -15,6 +17,8 @@ In this way it is possible to read your electricity consumption in Home Assistan
 and _heures_ _creuses_. Using this info, it is possible to switch devices on or off depending on the hours of cheap electricity. For instance your water heater can be controlled by this.
 
 ### OpenDTU
+
+![OpenDTU](./opendtu.jpg)
 
 The OpenDTU device is a way of communication between a HoyMiles inverter and your Home Assistant instance. Also the display shows the current power output of your inverter.
 
@@ -26,6 +30,6 @@ This is based on a blueprint: https://gist.github.com/NikGro/c9b783d13b4b8157901
 
 # Control your Hoymiles inverter to not return electricity
 
-[opendtu_zero_export_linky.yaml]
+[opendtu_zero_export_linky.yaml](./opendtu_zero_export_linky.yaml)
 
 
